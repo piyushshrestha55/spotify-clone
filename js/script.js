@@ -31,6 +31,9 @@ async function getSongs(folder) {
     }
   }
 
+  let b = await fetch(`http://127.0.0.1:5500/${folder}/info.json`);
+  let author = await b.json();
+  console.log(author);
   //showing all the songs in the playlist
   let songUL = document
     .querySelector(".songList")
@@ -43,7 +46,7 @@ async function getSongs(folder) {
       <img class="invert" src="img/music.svg" alt="" />
                 <div class="info">
                   <div>${song.replaceAll("%20", " ")}</div>
-                  <div>Song Artist</div>
+                  <div class="artist">${author.artist}</div>
                 </div>
                 <div class="playNow">
                   <span>Play Now</span>
@@ -70,6 +73,9 @@ const playMusic = (track, pause = false) => {
   if (!pause) {
     currentSong.play(track);
     play.src = "img/pause.svg";
+    document.querySelector(".playNow").lastElementChild.src = "img/pause.svg";
+  } else if (pause) {
+    document.querySelector(".playNow").lastElementChild.src = "img/play.svg";
   }
   document.querySelector(".songinfo").innerHTML = decodeURI(track);
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
@@ -136,9 +142,11 @@ async function main() {
     if (currentSong.paused) {
       currentSong.play();
       play.src = "img/pause.svg";
+      document.querySelector(".playNow").lastElementChild.src = "img/pause.svg";
     } else {
       currentSong.pause();
       play.src = "img/play.svg";
+      document.querySelector(".playNow").lastElementChild.src = "img/play.svg";
     }
   });
 
