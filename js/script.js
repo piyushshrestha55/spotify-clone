@@ -1,6 +1,7 @@
 let currentSong = new Audio();
 let songs;
 let currFolder;
+let index;
 
 function secondsToMinutesSeconds(seconds) {
   if (isNaN(seconds) || seconds < 0) {
@@ -57,26 +58,66 @@ async function getSongs(folder) {
 
   //Attach an event listener to play every song in the list
 
+  // Array.from(
+  //   document.querySelector(".songList").getElementsByTagName("li")
+  // ).forEach((e) => {
+  //   e.addEventListener("click", () => {
+  //     // console.log(e.querySelector(".info").firstElementChild.innerHTML);
+  //     playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
+  //     e.style.backgroundColor = `rgb(72, 70, 70)`;
+  //   });
+  // });
   Array.from(
     document.querySelector(".songList").getElementsByTagName("li")
   ).forEach((e) => {
-    e.addEventListener("click", () => {
-      // console.log(e.querySelector(".info").firstElementChild.innerHTML);
-      playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
+    e.addEventListener("click", (event) => {
+      // Reset all li backgrounds and play icons
+      document.querySelectorAll(".songList li").forEach((li) => {
+        li.style.backgroundColor = "";
+        li.querySelector(".playNow img").src = "img/play.svg";
+      });
+
+      // Highlight the clicked li
+      e.style.backgroundColor = `rgb(72, 70, 70)`;
+
+      // Play the selected song
+      const songName = e
+        .querySelector(".info")
+        .firstElementChild.innerHTML.trim();
+      playMusic(songName);
+
+      // Change the play icon of this item to pause
+      e.querySelector(".playNow img").src = "img/pause.svg";
     });
   });
+
   return songs;
+}
+function updateSongListIcons() {
+  document.querySelectorAll(".songList li").forEach((li, i) => {
+    const icon = li.querySelector(".playNow img");
+    if (i === index) {
+      icon.src = currentSong.paused ? "img/play.svg" : "img/pause.svg";
+    } else {
+      icon.src = "img/play.svg";
+    }
+  });
 }
 const playMusic = (track, pause = false) => {
   // let audio = new Audio("/songs/" + track);
   currentSong.src = `/${currFolder}/` + track;
+  // index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
+  index = songs.findIndex(
+    (s) => decodeURIComponent(s) === decodeURIComponent(track)
+  );
   if (!pause) {
-    currentSong.play(track);
+    currentSong.play();
     play.src = "img/pause.svg";
-    document.querySelector(".playNow").lastElementChild.src = "img/pause.svg";
-  } else if (pause) {
-    document.querySelector(".playNow").lastElementChild.src = "img/play.svg";
+  } else {
+    currentSong.pause();
+    play.src = "img/play.svg";
   }
+  updateSongListIcons();
   document.querySelector(".songinfo").innerHTML = decodeURI(track);
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
@@ -142,12 +183,12 @@ async function main() {
     if (currentSong.paused) {
       currentSong.play();
       play.src = "img/pause.svg";
-      document.querySelector(".playNow").lastElementChild.src = "img/pause.svg";
     } else {
       currentSong.pause();
       play.src = "img/play.svg";
-      document.querySelector(".playNow").lastElementChild.src = "img/play.svg";
     }
+
+    updateSongListIcons();
   });
 
   //For time duration
@@ -176,17 +217,17 @@ async function main() {
 
   //Adding event listener for previous and next
   previous.addEventListener("click", () => {
-    let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
     console.log(songs, index);
     if (index > 0) {
       playMusic(songs[index - 1]);
+      updateSongListIcons();
     }
   });
   next.addEventListener("click", () => {
-    let index = songs.indexOf(currentSong.src.split("/").pop());
     console.log(songs, index);
     if (index < songs.length - 1) {
       playMusic(songs[index + 1]);
+      updateSongListIcons();
     }
   });
 
