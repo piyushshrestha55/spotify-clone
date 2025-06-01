@@ -34,7 +34,6 @@ async function getSongs(folder) {
 
   let b = await fetch(`http://127.0.0.1:5500/${folder}/info.json`);
   let author = await b.json();
-  console.log(author);
   //showing all the songs in the playlist
   let songUL = document
     .querySelector(".songList")
@@ -71,23 +70,13 @@ async function getSongs(folder) {
     document.querySelector(".songList").getElementsByTagName("li")
   ).forEach((e) => {
     e.addEventListener("click", (event) => {
-      // Reset all li backgrounds and play icons
-      document.querySelectorAll(".songList li").forEach((li) => {
-        li.style.backgroundColor = "";
-        li.querySelector(".playNow img").src = "img/play.svg";
-      });
-
-      // Highlight the clicked li
-      e.style.backgroundColor = `rgb(72, 70, 70)`;
-
+      // Reset all li backgrounds and highlights the current Playing song.
+      songListTransition();
       // Play the selected song
       const songName = e
         .querySelector(".info")
         .firstElementChild.innerHTML.trim();
       playMusic(songName);
-
-      // Change the play icon of this item to pause
-      e.querySelector(".playNow img").src = "img/pause.svg";
     });
   });
 
@@ -103,6 +92,18 @@ function updateSongListIcons() {
     }
   });
 }
+function songListTransition() {
+  // Reset all li backgrounds and play icons
+  document.querySelectorAll(".songList li").forEach((li, i) => {
+    li.style.backgroundColor = "";
+    if (i == index) {
+      //Highlights the playing song
+      li.style.backgroundColor = "rgb(72, 70, 70)";
+    }
+  });
+
+  // Highlight the clicked li
+}
 const playMusic = (track, pause = false) => {
   // let audio = new Audio("/songs/" + track);
   currentSong.src = `/${currFolder}/` + track;
@@ -113,6 +114,8 @@ const playMusic = (track, pause = false) => {
   if (!pause) {
     currentSong.play();
     play.src = "img/pause.svg";
+    //Highlights the played song
+    songListTransition();
   } else {
     currentSong.pause();
     play.src = "img/play.svg";
