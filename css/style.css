@@ -283,10 +283,13 @@ body {
 @media (max-width: 1200px) {
   .left {
     position: absolute;
-    left: -110%;
+    left: -115%;
     width: 373px;
     transition: all 0.3s;
     z-index: 1;
+  }
+  .home {
+    margin: 1px;
   }
   .left .close {
     display: block;
@@ -300,6 +303,10 @@ body {
   .right {
     width: 100vw;
     margin: 0;
+  }
+  .spotifyPlaylist > h2 {
+    margin-bottom: 11px;
+    padding: 9px;
   }
   .playbar {
     width: calc(100vw - 60px);

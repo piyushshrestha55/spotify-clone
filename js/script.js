@@ -193,7 +193,6 @@ async function main() {
 
     updateSongListIcons();
   });
-
   //For time duration
   currentSong.addEventListener("timeupdate", () => {
     document.querySelector(".songtime").innerHTML = `${secondsToMinutesSeconds(
@@ -241,7 +240,7 @@ async function main() {
 
   //Adding event Listener to close
   document.querySelector(".close").addEventListener("click", () => {
-    document.querySelector(".left").style.left = "-110%";
+    document.querySelector(".left").style.left = "-115%";
   });
 
   //Adding event to volume
