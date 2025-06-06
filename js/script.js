@@ -222,14 +222,14 @@ async function main() {
     console.log(songs, index);
     if (index > 0) {
       playMusic(songs[index - 1]);
-      updateSongListIcons();
+      // updateSongListIcons();
     }
   });
   next.addEventListener("click", () => {
     console.log(songs, index);
     if (index < songs.length - 1) {
       playMusic(songs[index + 1]);
-      updateSongListIcons();
+      // updateSongListIcons();
     }
   });
 
