@@ -19,7 +19,7 @@ function secondsToMinutesSeconds(seconds) {
 //Function to fetch the songs from the folder
 async function getSongs(folder) {
   currFolder = folder;
-  let a = await fetch(`http://127.0.0.1:5500/${folder}/`);
+  let a = await fetch(`/${folder}/`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -32,7 +32,7 @@ async function getSongs(folder) {
     }
   }
 
-  let b = await fetch(`http://127.0.0.1:5500/${folder}/info.json`);
+  let b = await fetch(`/${folder}/info.json`);
   let author = await b.json();
   //showing all the songs in the playlist
   let songUL = document
@@ -125,7 +125,7 @@ const playMusic = (track, pause = false) => {
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
 async function displayAlbum() {
-  let a = await fetch("http://127.0.0.1:5500/songs/");
+  let a = await fetch("/songs/");
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -138,7 +138,7 @@ async function displayAlbum() {
       let folder = e.href.split("/").splice(-1)[0];
 
       //getting meta data of each of the folder
-      let a = await fetch(`http://127.0.0.1:5500/songs/${folder}/info.json`);
+      let a = await fetch(`/${folder}/info.json`);
       let response = await a.json();
       cardContainer.innerHTML =
         cardContainer.innerHTML +
